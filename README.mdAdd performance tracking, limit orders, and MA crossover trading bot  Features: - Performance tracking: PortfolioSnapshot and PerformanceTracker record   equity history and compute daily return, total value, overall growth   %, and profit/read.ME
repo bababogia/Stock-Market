@@ -1,0 +1,31 @@
+Add performance tracking, limit orders, and MA crossover trading bot
+
+Features:
+- Performance tracking: PortfolioSnapshot and PerformanceTracker record
+  equity history and compute daily return, total value, overall growth
+  %, and profit/loss. Exposed through a new Performance tab.
+- Limit orders and stop losses: PendingOrder models LIMIT_BUY,
+  LIMIT_SELL, and STOP_LOSS triggers. OrderMonitorService runs a daemon
+  ScheduledExecutorService that polls prices and executes triggered
+  orders off the EDT, dispatching GUI updates via invokeLater. Exposed
+  through a new Orders tab.
+- Trading bot and backtesting: PriceBar and MovingAverageCrossoverBot
+  implement an SMA crossover strategy for both live paper trading and
+  historical backtesting, with trade log, win rate, and P&L reporting.
+  Backtest runs on a SwingWorker. Exposed through a new Bot tab.
+
+Refactoring:
+- Portfolio: add estimateHoldingsValue() for snapshot valuation.
+- StockMarketGUI: replace single layout with JTabbedPane hosting the
+  Trading, Performance, Orders, and Bot tabs; stop the order monitor
+  on window close.
+
+Cleanup (resolves IDE warnings):
+- Remove unused imports across LoginWindow, RegisterWindow,
+  StockMarketGUI.
+- Make fields final where assigned once (LoginWindow, RegisterWindow,
+  Stock, StockMarketGUI).
+- Remove unused Stock.stocks field.
+- Remove unused entryPrice field from MovingAverageCrossoverBot.
+- Fix unused local variable in PerformanceTracker.profitAndLoss().
+- Remove unused serialVersionUID from StockMarketGUI.
